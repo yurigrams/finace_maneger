@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "644802613798",
+    "project_id": "financemaneger-senai",
+    "storage_bucket": "financemaneger-senai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644802613798:android:6156f3343afd43525d0ce7",
+        "android_client_info": {
+          "package_name": "com.financeManeger.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgV2QcpRe82jGid3buFxDHp9OW9PEQ7vQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
