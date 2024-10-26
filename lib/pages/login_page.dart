@@ -2,6 +2,7 @@ import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
 import 'package:finace_maneger/components/custom_button.dart';
 import 'package:finace_maneger/components/custom_imput.dart';
+import 'package:finace_maneger/pages/register_user_page.dart';
 import 'package:flutter/material.dart';
 
 import '../service/firestore_service.dart';
@@ -28,11 +29,13 @@ class LoginPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomButton(titleButton: 'Entrar'),
+                CustomButton(titleButton: 'Entrar', onPressed: () {},),
                 SizedBox(
                   width: 15,
                 ),
-                CustomButton(titleButton: 'Cadastrar'),
+                CustomButton(titleButton: 'Cadastrar', onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>UserRegistrationPage()));
+                }),
               ],
             ),
             Row(
@@ -41,6 +44,7 @@ class LoginPage extends StatelessWidget {
                 Text('Esqueceu a senha?'),
                 TextButton(
                     onPressed: () {
+                      print('Funcionando');
                       FireAuthService().recoverPassword();
                     },
                     child: Text(

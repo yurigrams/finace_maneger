@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
 
   String titleButton;
-  CustomButton({super.key, required this.titleButton});
+  VoidCallback onPressed;
+  CustomButton({super.key, required this.titleButton, required this.onPressed});
+
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primarygroundColor),
-        onPressed: () async {
+        onPressed: onPressed
           // try{
           //   await FireAuthService().login();
           //   Navigator.pushReplacementNamed(context, '/');
@@ -26,7 +28,7 @@ class CustomButton extends StatelessWidget {
           //       )
           //   );
           // }
-        },
+        ,
         child: Text(titleButton),
       ),
     );
