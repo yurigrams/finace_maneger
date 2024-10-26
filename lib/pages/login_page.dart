@@ -5,7 +5,7 @@ import 'package:finace_maneger/components/custom_imput.dart';
 import 'package:finace_maneger/pages/register_user_page.dart';
 import 'package:flutter/material.dart';
 
-import '../service/firestore_service.dart';
+import '../service/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
