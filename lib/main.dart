@@ -1,5 +1,6 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
+import 'package:finace_maneger/pages/expense_page.dart';
 import 'package:finace_maneger/pages/home_page.dart';
 import 'package:finace_maneger/pages/login_page.dart';
 import 'package:finace_maneger/pages/register_expense_page.dart';
@@ -40,7 +41,7 @@ void main() async {
         'login':(context)=>LoginPage(),
         'register/user':(context)=>UserRegistrationPage(),
         'register/expense':(context)=>RegisterExpensePage(),
-        // 'chat':(context)=>ChatPage(),
+        'table':(context)=>ExpensePage(),
 
       },
       // home: LoginPage(),
