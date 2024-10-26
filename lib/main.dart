@@ -1,3 +1,4 @@
+import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
 import 'package:finace_maneger/pages/home_page.dart';
 import 'package:finace_maneger/pages/login_page.dart';
@@ -14,7 +15,18 @@ void main() async {
       debugShowCheckedModeBanner: false,
       theme:
       ThemeData(
-          fontFamily: GoogleFonts.adamina().fontFamily,
+          primaryColor: AppColors.primarygroundColor,
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primarygroundColor,
+            primary: AppColors.backgroundColor,
+        ),
+          textTheme: GoogleFonts.robotoTextTheme(
+            ThemeData.light().textTheme,
+          ).apply(
+            bodyColor: AppColors.white,
+            displayColor: AppColors.white
+          ),
+          fontFamily: GoogleFonts.roboto().fontFamily,
           useMaterial3: false
       ),
       initialRoute: 'login',
@@ -30,4 +42,3 @@ void main() async {
     ),
   );
 }
-
