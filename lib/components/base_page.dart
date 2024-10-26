@@ -1,4 +1,5 @@
 import 'package:finace_maneger/components/app_colors.dart';
+import 'package:finace_maneger/pages/expense_page.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatefulWidget {
@@ -37,7 +38,9 @@ class _BasePageState extends State<BasePage> {
             ),
             ListTile(
               title: Text('Exibir Despesas'),
-              onTap: (){},
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ExpensePage()));
+              },
             ),
             ListTile(
               title: Text('Cadastrar Despesas'),
