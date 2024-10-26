@@ -25,7 +25,8 @@ class _BasePageState extends State<BasePage> {
           ),
           backgroundColor: AppColors.primarygroundColor,
           centerTitle: true,
-        )
+        ),
+      body: widget.body,
     );
   }
 }

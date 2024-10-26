@@ -1,3 +1,4 @@
+import 'package:finace_maneger/components/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomInput extends StatelessWidget {
@@ -20,7 +21,7 @@ class CustomInput extends StatelessWidget {
             border: OutlineInputBorder(),
             labelText: labelText,
             filled: true,
-            fillColor: Colors.green
+            fillColor: AppColors.white
         ),
       ),
     );
