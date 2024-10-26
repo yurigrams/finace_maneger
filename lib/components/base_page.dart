@@ -52,7 +52,7 @@ class _BasePageState extends State<BasePage> {
       appBar: AppBar(
         title: Text(
           widget.titles,
-          style: const TextStyle(color: AppColors.white),
+          style: const TextStyle(color: AppColors.white, fontSize: 30), 
         ),
         backgroundColor: AppColors.primarygroundColor,
         centerTitle: true,

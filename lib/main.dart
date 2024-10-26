@@ -42,6 +42,7 @@ void main() async {
         'register/user':(context)=>UserRegistrationPage(),
         'register/expense':(context)=>RegisterExpensePage(),
         'table':(context)=>ExpensePage(),
+        'home':(context)=>HomePage(),
 
       },
       // home: LoginPage(),
