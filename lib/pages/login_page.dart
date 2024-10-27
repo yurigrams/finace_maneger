@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
                 TextButton(
                     onPressed: () {
                       print('Funcionando');
-                      FireAuthService().recoverPassword();
+                      FireAuthService().recoverPassword(email.text);
                     },
                     child: Text(
                       'Clique aqui',

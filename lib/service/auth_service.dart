@@ -49,9 +49,9 @@ class FireAuthService {
     await auth.signOut();
   }
 
-  recoverPassword() async {
+  recoverPassword(String email) async {
     try {
-      await auth.sendPasswordResetEmail(email: 'yurigrams@gmail.com');
+      await auth.sendPasswordResetEmail(email: email);
       return true;
     } catch (e) {
       throw e;
