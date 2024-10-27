@@ -1,16 +1,23 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
+import 'package:finace_maneger/components/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
     return BasePage(
-      titles: 'Gráfico de Gastos',
-      body: SingleChildScrollView(
+      titles: 'Resumo de Gastos',
+      body: Container(
+        width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -21,10 +28,6 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 30,
                 ),
-              ),
-              Text(
-                "Despesas do mês",
-                style: TextStyle(color: AppColors.white, fontSize: 30),
               ),
               SizedBox(height: 20),
               Container(
@@ -50,7 +53,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 100),
               Text(
                 "Gasto Anual",
                 style: TextStyle(color: AppColors.white, fontSize: 30),
@@ -79,6 +82,13 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 100),
+              Container(
+                child: CustomButton(titleButton: 'Adicionar Despesa', onPressed: () {
+                  Navigator.pushNamed(context, 'register/expense');
+                }
+                ),
+                )
             ],
           ),
         ),

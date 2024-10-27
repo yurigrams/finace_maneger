@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -41,47 +43,43 @@ class ExpensePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BasePage(
       titles: "Despesas",
-      body: FutureBuilder<List<Expense>>(
-        future: _getExpenses(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            print("Erro ao carregar despesas: ${snapshot.error}");
-            return Center(child: Text("Erro ao carregar despesas: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("Nenhuma despesa encontrada."));
-          } else {
-            final expenses = snapshot.data!;
-            return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: DataTable(
-                    columns: [
-                      DataColumn(label: Text("Tipo")),
-                      DataColumn(label: Text("Valor")),
-                      DataColumn(label: Text("Categoria")),
-                      DataColumn(label: Text("Data")),
-                      DataColumn(label: Text("Notas")),
-                    ],
-                    rows: expenses.map((expense) {
-                      return DataRow(cells: [
-                        DataCell(Text(expense.tipo)),
-                        DataCell(Text(expense.valor.toStringAsFixed(2))),
-                        DataCell(Text(expense.categoria)),
-                        DataCell(Text(expense.getFormattedDate())),
-                        DataCell(Text(expense.notas)),
-                      ]);
-                    }).toList(),
-                  ),
-                ),
-              ),
-            );
-          }
-        },
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: FutureBuilder<List<Expense>>(
+          future: _getExpenses(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              print("Erro ao carregar despesas: ${snapshot.error}");
+              return Center(child: Text("Erro ao carregar despesas: ${snapshot.error}"));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text("Nenhuma despesa encontrada."));
+            } else {
+              final expenses = snapshot.data!;
+              return DataTable(
+                columns: [
+                  DataColumn(label: Text("Tipo")),
+                  DataColumn(label: Text("Valor")),
+                  DataColumn(label: Text("Categoria")),
+                  DataColumn(label: Text("Data")),
+                  DataColumn(label: Text("Notas")),
+      
+                ],
+                rows: expenses.map((expense) {
+                  return DataRow(
+                    cells: [
+                    DataCell(Text(expense.tipo)),
+                    DataCell(Text(expense.valor.toStringAsFixed(2))),
+                    DataCell(Text(expense.categoria)),
+                    DataCell(Text(expense.getFormattedDate())),
+                    DataCell(Text(expense.notas)),
+                  ]);
+                }).toList(),
+              );
+            }
+          },
+        ),
       ),
     );
   }

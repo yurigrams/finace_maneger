@@ -34,14 +34,13 @@ void main() async {
           fontFamily: GoogleFonts.roboto().fontFamily,
           useMaterial3: false
       ),
-      initialRoute: 'login',
+      initialRoute: 'table',
       routes: {
         '/':(context)=>HomePage(),
         'login':(context)=>LoginPage(),
         'register/user':(context)=>UserRegistrationPage(),
         'register/expense':(context)=>RegisterExpensePage(),
         'table':(context)=>ExpensePage(),
-        'home':(context)=>HomePage(),
 
       },
       // home: LoginPage(),
