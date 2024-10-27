@@ -1,6 +1,7 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
 import 'package:finace_maneger/components/custom_button.dart';
+import 'package:finace_maneger/components/custom_button_login.dart';
 import 'package:finace_maneger/components/custom_imput.dart';
 import 'package:finace_maneger/pages/register_user_page.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +30,20 @@ class LoginPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomButton(titleButton: 'Entrar', onPressed: () {},),
+                CustomButtonLogin(
+                  titleButton: 'Entrar',
+                ),
                 SizedBox(
                   width: 15,
                 ),
-                CustomButton(titleButton: 'Cadastrar', onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>UserRegistrationPage()));
-                }),
+                CustomButton(
+                    titleButton: 'Cadastrar',
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserRegistrationPage()));
+                    }),
               ],
             ),
             Row(

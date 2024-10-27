@@ -16,19 +16,7 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primarygroundColor),
-        onPressed: onPressed
-          // try{
-          //   await FireAuthService().login();
-          //   Navigator.pushReplacementNamed(context, '/');
-          // }catch (e) {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //       SnackBar(
-          //         backgroundColor: Colors.red,
-          //         content: Text('Usuario ou senha incorreto'),
-          //       )
-          //   );
-          // }
-        ,
+        onPressed: onPressed,
         child: Text(titleButton),
       ),
     );
