@@ -1,5 +1,6 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
+import 'package:finace_maneger/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,9 +19,12 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  final FireAuthService _authService = FireAuthService();
+
   @override
   Widget build(BuildContext context) {
-    return BasePage(titles:"Cadastro de Usuário" ,
+    return BasePage(
+      titles: "Cadastro de Usuário",
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -40,13 +44,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                   backgroundColor: AppColors.primarygroundColor,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Cadastro realizado com sucesso!')),
-                    );
-                  }
-                },
+                onPressed: _registerUser,
                 child: Text("Cadastrar"),
               ),
             ],
@@ -54,6 +52,29 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
         ),
       ),
     );
+  }
+
+  void _registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      final name = _nameController.text;
+      final email = _emailController.text;
+      final cpf = _cpfController.text;
+      final birthDate = _birthDateController.text;
+      final password = _passwordController.text;
+
+      final user = await _authService.register(email, password, name, cpf, birthDate);
+
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cadastro realizado com sucesso!')),
+        );
+        Navigator.pop(context); // Voltar para a tela anterior após o cadastro
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao realizar o cadastro. Tente novamente.')),
+        );
+      }
+    }
   }
 
   Widget _buildDateField(String label, TextEditingController controller) {
