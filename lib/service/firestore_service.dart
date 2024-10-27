@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finace_maneger/service/auth_service.dart';
 
+import '../pages/expense_page.dart';
+
 class FirestoreService {
 
   var db = FirebaseFirestore.instance;
@@ -18,12 +20,14 @@ class FirestoreService {
 
   }
 
-  getExpense() async {
-    try{
+  Future<List<Expense>> getExpense() async {
+    try {
       var despesas = await db.collection('Despesas').orderBy('data', descending: true).get();
-      return despesas.docs;
-    }catch (e) {
-    throw e;
+      return despesas.docs.map((doc) {
+        return Expense.fromFirestore(doc.data() as Map<String, dynamic>);
+      }).toList();
+    } catch (e) {
+      throw Exception("Erro ao obter despesas: $e");
     }
   }
 }
