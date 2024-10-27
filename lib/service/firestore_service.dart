@@ -24,14 +24,50 @@ class FirestoreService {
   }
 
   Future<List<Expense>> getExpense() async {
-    try {
-      var despesas = await db.collection('Despesas').orderBy('data', descending: true).get();
-      return despesas.docs.map((doc) {
-        return Expense.fromFirestore(doc.data() as Map<String, dynamic>);
-      }).toList();
-    } catch (e) {
-      throw Exception("Erro ao obter despesas: $e");
-    }
+  try {
+    var despesas = await db.collection('Despesas').orderBy('data', descending: true).get();
+    return despesas.docs.map((doc) {
+      // Use doc.data() para obter os dados do documento
+      final data = doc.data() as Map<String, dynamic>; // Obtém os dados do documento
+      return Expense.fromFirestore({
+        ...data, // Espalha os dados do documento
+        'id': doc.id, // Adiciona o documentId ao mapa
+      });
+    }).toList();
+  } catch (e) {
+    throw Exception("Erro ao obter despesas: $e");
   }
 }
+
+  getTotalExpenses() async {
+    try {
+      double total = 0;
+
+      var expenses = await db.collection('Despesas')
+          .get();
+
+      for (var doc in expenses.docs) {
+        double value = doc['valor'] ?? 0.0;
+        total += value;
+      }
+
+      return (total);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  deleteExpense(id) async {
+    try { 
+      await db.collection('Despesas').doc(id).delete();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+}
+
+ 
+
+
 

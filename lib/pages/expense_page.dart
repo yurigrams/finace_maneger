@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +10,7 @@ class Expense {
   final String categoria;
   final Timestamp data;
   final String notas;
+  final String documentId;
 
   Expense({
     required this.tipo,
@@ -19,10 +18,13 @@ class Expense {
     required this.categoria,
     required this.data,
     required this.notas,
+    required this.documentId,
   });
 
   factory Expense.fromFirestore(Map<String, dynamic> json) {
+    print(json);
     return Expense(
+      documentId: json['id'] ?? '',
       tipo: json['tipo'] ?? '',
       valor: (json['valor'] ?? 0).toDouble(),
       categoria: json['categoria'] ?? '',
@@ -58,22 +60,39 @@ class ExpensePage extends StatelessWidget {
             } else {
               final expenses = snapshot.data!;
               return DataTable(
+                columnSpacing: 12, // Espaço entre as colunas
                 columns: [
                   DataColumn(label: Text("Tipo")),
                   DataColumn(label: Text("Valor")),
                   DataColumn(label: Text("Categoria")),
                   DataColumn(label: Text("Data")),
                   DataColumn(label: Text("Notas")),
-      
+                  DataColumn(label: Text("Ações")), // Coluna para ações
                 ],
                 rows: expenses.map((expense) {
-                  return DataRow(
-                    cells: [
+                  return DataRow(cells: [
                     DataCell(Text(expense.tipo)),
                     DataCell(Text(expense.valor.toStringAsFixed(2))),
                     DataCell(Text(expense.categoria)),
                     DataCell(Text(expense.getFormattedDate())),
                     DataCell(Text(expense.notas)),
+                    DataCell(Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.add), // Ícone de edição
+                          onPressed: () {
+                            _editExpense(context, expense);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red), // Ícone de exclusão
+                          onPressed: () {
+                            _deleteExpense(expense.documentId);
+                          },
+                        ),
+                      ],
+                    )),
                   ]);
                 }).toList(),
               );
@@ -87,10 +106,25 @@ class ExpensePage extends StatelessWidget {
   Future<List<Expense>> _getExpenses() async {
     try {
       var docs = await firestoreService.getExpense();
+      print(docs);
       return docs;
     } catch (e) {
       print("Erro ao obter despesas: $e");
       throw Exception("Erro ao obter despesas: $e");
+    }
+  }
+
+  void _editExpense(BuildContext context, Expense expense) {
+    // Lógica para editar a despesa
+    print("Edit expense: ${expense.tipo}");
+  }
+
+  void _deleteExpense(String documentId) async {
+    try {
+      await firestoreService.deleteExpense(documentId);
+    } catch (e) {
+      print("Erro ao excluir despesa: $e");
+      throw Exception("Erro ao excluir despesa: $e");
     }
   }
 }

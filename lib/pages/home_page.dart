@@ -1,19 +1,38 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
 import 'package:finace_maneger/components/custom_button.dart';
+import 'package:finace_maneger/service/firestore_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirestoreService firestoreService = FirestoreService();
+  double totalExpenses = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTotalExpenses();
+  }
+
+  Future<void> _loadTotalExpenses() async {
+    try {
+      double total = await firestoreService.getTotalExpenses();
+      setState(() {
+        totalExpenses = total;
+      });
+    } catch (e) {
+      print("Error loading total expenses: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return BasePage(
       titles: 'Resumo de Gastos',
       body: Container(
@@ -25,9 +44,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Text(
                 'Gastos Mensais',
-                style: TextStyle(
-                  fontSize: 30,
-                ),
+                style: TextStyle(fontSize: 30),
               ),
               SizedBox(height: 20),
               Container(
@@ -46,9 +63,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'R\$ 0.00',
+                      'R\$ ${totalExpenses.toStringAsFixed(2)}', 
                       style: TextStyle(
-                          color: AppColors.primarygroundColor, fontSize: 25),
+                        color: AppColors.primarygroundColor,
+                        fontSize: 25,
+                      ),
                     ),
                   ],
                 ),
@@ -75,20 +94,24 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'R\$ 0.00',
+                      'R\$ ${totalExpenses.toStringAsFixed(2)}',
                       style: TextStyle(
-                          color: AppColors.primarygroundColor, fontSize: 25),
+                        color: AppColors.primarygroundColor,
+                        fontSize: 25,
+                      ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 100),
               Container(
-                child: CustomButton(titleButton: 'Adicionar Despesa', onPressed: () {
-                  Navigator.pushNamed(context, 'register/expense');
-                }
+                child: CustomButton(
+                  titleButton: 'Adicionar Despesa',
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'register/expense');
+                  },
                 ),
-                )
+              ),
             ],
           ),
         ),
