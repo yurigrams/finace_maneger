@@ -3,15 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FireAuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  login() async {
-    try {
-      var user = await auth.signInWithEmailAndPassword(
-          email: 'yurigrams@gmail.com', password: '123456789');
-      return user;
-    } catch (e) {
-      throw e;
-    }
+  login(String email, String password) async {
+  try {
+    UserCredential userCredential = await auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  } catch (e) {
+    print("Erro ao fazer login: $e");
+    return null;
   }
+}
 
   recoverPassword() async {
     try {
@@ -27,14 +30,9 @@ class FireAuthService {
     return user;
   }
 
-  register(name, email, password) async {
-    try {
-      var user = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      await user.user!.updateDisplayName(name);
-      return user;
-    } catch (e) {
-      throw e;
-    }
+  logout() async {
+    await auth.signOut();
   }
 }
+
+  

@@ -1,5 +1,6 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/service/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CustomButtonLogin extends StatelessWidget {
@@ -19,7 +20,7 @@ class CustomButtonLogin extends StatelessWidget {
         backgroundColor: AppColors.primarygroundColor),
         onPressed: () async {
                   try { 
-                    await FireAuthService().login();
+                    await FireAuthService().login('email', 'senha');
                     Navigator.pushReplacementNamed(context, '/');
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(

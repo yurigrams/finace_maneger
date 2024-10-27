@@ -1,7 +1,9 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/pages/expense_page.dart';
 import 'package:finace_maneger/pages/home_page.dart';
+import 'package:finace_maneger/pages/login_page.dart';
 import 'package:finace_maneger/pages/register_expense_page.dart';
+import 'package:finace_maneger/service/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class BasePage extends StatefulWidget {
@@ -50,6 +52,13 @@ class _BasePageState extends State<BasePage> {
               title: Text('Cadastrar Despesas'),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterExpensePage()));
+              },
+            ),
+            ListTile(
+              title: Text('Sair'),
+              onTap: (){
+                FireAuthService().logout();
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage(),));
               },
             ),
           ],

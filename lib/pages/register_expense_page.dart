@@ -1,4 +1,6 @@
+import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/custom_imput_register.dart';
+import 'package:finace_maneger/pages/expense_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -96,11 +98,8 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
+          fillColor: AppColors.white,
+          border: OutlineInputBorder(),
           suffixIcon: Icon(Icons.calendar_today, color: Colors.grey[700]),
         ),
         onTap: () async {
@@ -151,13 +150,13 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
       _expenseTypeController.text,
       double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0,
       _categoryController.text,
-      Timestamp.now(), // Aqui você pode ajustar para usar a data selecionada
+      Timestamp.now(), 
       _notesController.text,
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Despesa cadastrada com sucesso!')),
     );
-    Navigator.pop(context); // Volta para a tela anterior
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>ExpensePage()));
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Erro ao cadastrar despesa: $e')),

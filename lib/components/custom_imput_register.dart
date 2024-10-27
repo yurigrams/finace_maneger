@@ -22,6 +22,7 @@ class CustomInputRegister extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: TextField(
+        style: const TextStyle(color: AppColors.black),
         controller: controller,
         obscureText: obscure,
         keyboardType: keyboardType,
