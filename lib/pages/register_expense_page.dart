@@ -1,14 +1,12 @@
-import 'package:finace_maneger/components/base_page.dart';
-import 'package:finace_maneger/components/custom_button.dart';
+import 'package:finace_maneger/components/custom_imput_register.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import '../components/app_colors.dart';
+import '../components/base_page.dart';
+import '../components/custom_button.dart';
+import '../service/firestore_service.dart';
 
 class RegisterExpensePage extends StatefulWidget {
-  final Map<String, dynamic>? expenseData; // Dados da despesa para edição
-
-  RegisterExpensePage({this.expenseData});
-
   @override
   _RegisterExpensePageState createState() => _RegisterExpensePageState();
 }
@@ -21,31 +19,23 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
   late TextEditingController _dateController;
   late TextEditingController _notesController;
 
+  final FirestoreService firestoreService = FirestoreService();
   final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
   @override
   void initState() {
     super.initState();
-
-    // Inicializar controladores com valores existentes, se houver
-    _expenseTypeController = TextEditingController(text: widget.expenseData?['tipoDespesa'] ?? '');
-    _amountController = TextEditingController(
-      text: widget.expenseData?['valor'] != null
-          ? _currencyFormat.format(widget.expenseData!['valor'])
-          : '',
-    );
-    _categoryController = TextEditingController(text: widget.expenseData?['categoria'] ?? '');
-    _dateController = TextEditingController(
-      text: widget.expenseData?['data'] != null
-          ? DateFormat('dd/MM/yyyy').format(widget.expenseData!['data'])
-          : '',
-    );
-    _notesController = TextEditingController(text: widget.expenseData?['notas'] ?? '');
+    _expenseTypeController = TextEditingController();
+    _amountController = TextEditingController();
+    _categoryController = TextEditingController();
+    _dateController = TextEditingController();
+    _notesController = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BasePage(titles: 'Registrar Despesa',
+    return BasePage(
+      titles: 'Registrar Despesa',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -64,14 +54,11 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
               _buildDateField("Data", _dateController),
               _buildTextField("Notas Adicionais", _notesController, maxLines: 3),
               const SizedBox(height: 20),
-              CustomButton(titleButton: widget.expenseData != null ? "Atualizar" : "Cadastrar",
+              CustomButton(
+                titleButton: "Cadastrar",
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    if (widget.expenseData != null) {
-                      _updateExpense();
-                    } else {
-                      _createExpense();
-                    }
+                    _createExpense();
                   }
                 },
               ),
@@ -83,36 +70,18 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
   }
 
   Widget _buildTextField(
-      String label,
-      TextEditingController controller, {
-        TextInputType keyboardType = TextInputType.text,
-        int maxLines = 1,
-        void Function(String)? onChanged,
-      }) {
+    String label,
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+    void Function(String)? onChanged,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
+      child: CustomInputRegister(
+        labelText: label,
         controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        onChanged: onChanged,
-        style: TextStyle(color: Colors.grey[700]),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: Colors.grey[700]),
-          filled: true,
-          fillColor: AppColors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Por favor, insira $label';
-          }
-          return null;
-        },
+        obscure: false,
       ),
     );
   }
@@ -126,9 +95,8 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
         style: TextStyle(color: Colors.grey[700]),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.grey[700]),
           filled: true,
-          fillColor: AppColors.white,
+          fillColor: Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
@@ -144,11 +112,7 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
             builder: (context, child) {
               return Theme(
                 data: Theme.of(context).copyWith(
-                  colorScheme: ColorScheme.light(
-                    primary: AppColors.primarygroundColor,
-                    onPrimary: AppColors.white,
-                    onSurface: Colors.grey[700]!,
-                  ),
+                  colorScheme: ColorScheme.light(primary: Colors.blue),
                 ),
                 child: child!,
               );
@@ -181,17 +145,25 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
     );
   }
 
-  void _updateExpense() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Despesa atualizada com sucesso!')),
+  void _createExpense() async {
+  try {
+    await firestoreService.postExpense(
+      _expenseTypeController.text,
+      double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0,
+      _categoryController.text,
+      Timestamp.now(), // Aqui você pode ajustar para usar a data selecionada
+      _notesController.text,
     );
-  }
-
-  void _createExpense() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Despesa cadastrada com sucesso!')),
     );
+    Navigator.pop(context); // Volta para a tela anterior
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Erro ao cadastrar despesa: $e')),
+    );
   }
+}
 
   @override
   void dispose() {

@@ -7,17 +7,20 @@ class FirestoreService {
 
   var db = FirebaseFirestore.instance;
 
-  postExpense(despesa, tipo, valor, categoria, data, notas) async{
-
-    db.collection('Despesas').add({
-      "user": await FireAuthService().checkUser(),
-      "tipo":tipo,
-      "valor":valor,
-      "categoria":categoria,
-      "data":data,
-      "notas":notas,
-    });
-
+  Future<void> postExpense(String tipo, double valor, String categoria, Timestamp data, String notas) async {
+    try {
+      await db.collection('Despesas').add({
+        "user": await FireAuthService().checkUser(), // Verifica o usuário logado
+        "tipo": tipo,
+        "valor": valor,
+        "categoria": categoria,
+        "data": data,
+        "notas": notas,
+      });
+    } catch (e) {
+      print("Erro ao adicionar despesa: $e");
+      throw e; // Re-lança a exceção para ser capturada onde o método é chamado
+    }
   }
 
   Future<List<Expense>> getExpense() async {
@@ -31,3 +34,4 @@ class FirestoreService {
     }
   }
 }
+
