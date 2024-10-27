@@ -1,5 +1,6 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
+import 'package:finace_maneger/components/base_page_logout.dart';
 import 'package:finace_maneger/service/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +24,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BasePage(
+    return BasePageLogout(
       titles: "Cadastro de Usuário",
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -81,6 +82,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        style: TextStyle(color: AppColors.black),
         controller: controller,
         readOnly: true,
         decoration: InputDecoration(
@@ -132,6 +134,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
+        style: TextStyle(color: AppColors.black),
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,

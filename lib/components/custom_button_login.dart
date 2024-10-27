@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 class CustomButtonLogin extends StatelessWidget {
 
   String titleButton;
+  TextEditingController email;
+  TextEditingController senha;
 
 
-  CustomButtonLogin({super.key, required this.titleButton});
+  CustomButtonLogin({super.key, required this.titleButton, required this.email, required this.senha});
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,9 @@ class CustomButtonLogin extends StatelessWidget {
         backgroundColor: AppColors.primarygroundColor),
         onPressed: () async {
                   try { 
-                    await FireAuthService().login('email', 'senha');
+                    await FireAuthService().login(email.text, senha.text);
                     Navigator.pushReplacementNamed(context, '/');
+                    print('logou');
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

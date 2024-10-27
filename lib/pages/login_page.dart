@@ -1,5 +1,6 @@
 import 'package:finace_maneger/components/app_colors.dart';
 import 'package:finace_maneger/components/base_page.dart';
+import 'package:finace_maneger/components/base_page_logout.dart';
 import 'package:finace_maneger/components/custom_button.dart';
 import 'package:finace_maneger/components/custom_button_login.dart';
 import 'package:finace_maneger/components/custom_imput.dart';
@@ -13,7 +14,9 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BasePage(
+    TextEditingController email = TextEditingController();
+    TextEditingController senha = TextEditingController();
+    return BasePageLogout(
       titles: 'Login',
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 14),
@@ -22,15 +25,15 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FlutterLogo(size: 180),
-            CustomInput(labelText: 'E-mail'),
-            CustomInput(labelText: 'Senha', obscure: true),
+            CustomInput(labelText: 'E-mail', controller: email),
+            CustomInput(labelText: 'Senha', obscure: true, controller: senha),
             SizedBox(
               height: 15,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomButtonLogin(
+                CustomButtonLogin(email: email,senha: senha,
                   titleButton: 'Entrar',
                 ),
                 SizedBox(

@@ -5,7 +5,7 @@ class FireAuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<User?> register(String email, String password, String name, String cpf, String birthDate) async {
+  register(String email, String password, String name, String cpf, String birthDate) async {
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
@@ -27,7 +27,8 @@ class FireAuthService {
     }
   }
 
-  Future<User?> login(String email, String password) async {
+  login(String email, String password) async {
+    print(email);
     try {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
         email: email,
@@ -36,15 +37,15 @@ class FireAuthService {
       return userCredential.user;
     } catch (e) {
       print("Erro ao fazer login: $e");
-      return null;
+      rethrow;
     }
   }
 
-  Future<String?> checkUser() async {
+  checkUser() async {
     return auth.currentUser?.uid;
   }
 
-  Future<void> logout() async {
+  logout() async {
     await auth.signOut();
   }
 
