@@ -38,8 +38,48 @@ class Expense {
   }
 }
 
-class ExpensePage extends StatelessWidget {
+class ExpensePage extends StatefulWidget {
+  @override
+  _ExpensePageState createState() => _ExpensePageState();
+}
+
+class _ExpensePageState extends State<ExpensePage> {
   final FirestoreService firestoreService = FirestoreService();
+  late Future<List<Expense>> _expensesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _expensesFuture = _getExpenses(); // Carrega despesas ao iniciar
+  }
+
+  Future<List<Expense>> _getExpenses() async {
+    try {
+      var docs = await firestoreService.getExpense();
+      print(docs);
+      return docs;
+    } catch (e) {
+      print("Erro ao obter despesas: $e");
+      throw Exception("Erro ao obter despesas: $e");
+    }
+  }
+
+  void _editExpense(BuildContext context, Expense expense) {
+    // Lógica para editar a despesa
+    print("Edit expense: ${expense.tipo}");
+  }
+
+  void _deleteExpense(String documentId) async {
+    try {
+      await firestoreService.deleteExpense(documentId);
+      setState(() {
+        _expensesFuture = _getExpenses(); // Atualiza a lista de despesas
+      });
+    } catch (e) {
+      print("Erro ao excluir despesa: $e");
+      throw Exception("Erro ao excluir despesa: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +88,7 @@ class ExpensePage extends StatelessWidget {
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: FutureBuilder<List<Expense>>(
-          future: _getExpenses(),
+          future: _expensesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -101,30 +141,5 @@ class ExpensePage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<List<Expense>> _getExpenses() async {
-    try {
-      var docs = await firestoreService.getExpense();
-      print(docs);
-      return docs;
-    } catch (e) {
-      print("Erro ao obter despesas: $e");
-      throw Exception("Erro ao obter despesas: $e");
-    }
-  }
-
-  void _editExpense(BuildContext context, Expense expense) {
-    // Lógica para editar a despesa
-    print("Edit expense: ${expense.tipo}");
-  }
-
-  void _deleteExpense(String documentId) async {
-    try {
-      await firestoreService.deleteExpense(documentId);
-    } catch (e) {
-      print("Erro ao excluir despesa: $e");
-      throw Exception("Erro ao excluir despesa: $e");
-    }
   }
 }
