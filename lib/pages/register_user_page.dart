@@ -1,4 +1,5 @@
 import 'package:finace_maneger/components/app_colors.dart';
+import 'package:finace_maneger/components/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,12 +20,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text("Cadastro de Usuário"),
-        backgroundColor: AppColors.primarygroundColor,
-      ),
+    return BasePage(titles:"Cadastro de Usuário" ,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -69,7 +65,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppColors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
