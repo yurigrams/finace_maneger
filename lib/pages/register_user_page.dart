@@ -69,7 +69,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Cadastro realizado com sucesso!')),
         );
-        Navigator.pop(context); // Voltar para a tela anterior após o cadastro
+        Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erro ao realizar o cadastro. Tente novamente.')),

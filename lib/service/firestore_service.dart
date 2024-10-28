@@ -10,7 +10,7 @@ class FirestoreService {
   Future<void> postExpense(String tipo, double valor, String categoria, Timestamp data, String notas) async {
     try {
       await db.collection('Despesas').add({
-        "user": await FireAuthService().checkUser(), // Verifica o usuário logado
+        "user": await FireAuthService().checkUser(),
         "tipo": tipo,
         "valor": valor,
         "categoria": categoria,
@@ -19,7 +19,7 @@ class FirestoreService {
       });
     } catch (e) {
       print("Erro ao adicionar despesa: $e");
-      throw e; // Re-lança a exceção para ser capturada onde o método é chamado
+      throw e;
     }
   }
 
@@ -27,11 +27,10 @@ class FirestoreService {
   try {
     var despesas = await db.collection('Despesas').orderBy('data', descending: true).get();
     return despesas.docs.map((doc) {
-      // Use doc.data() para obter os dados do documento
-      final data = doc.data() as Map<String, dynamic>; // Obtém os dados do documento
+      final data = doc.data() as Map<String, dynamic>;
       return Expense.fromFirestore({
-        ...data, // Espalha os dados do documento
-        'id': doc.id, // Adiciona o documentId ao mapa
+        ...data,
+        'id': doc.id,
       });
     }).toList();
   } catch (e) {
@@ -42,15 +41,12 @@ class FirestoreService {
   getTotalExpenses() async {
     try {
       double total = 0;
-
       var expenses = await db.collection('Despesas')
           .get();
-
       for (var doc in expenses.docs) {
         double value = doc['valor'] ?? 0.0;
         total += value;
       }
-
       return (total);
     } catch (e) {
       rethrow;
@@ -65,9 +61,24 @@ class FirestoreService {
     }
   }
 
+  Future<DocumentSnapshot> getExpenseById(String documentId) {
+    return FirebaseFirestore.instance.collection('Despesas').doc(documentId).get();
+  }
+
+  Future<void> updateExpense(
+      String documentId,
+      String type,
+      double amount,
+      String category,
+      Timestamp date,
+      String notes,
+      ) {
+    return FirebaseFirestore.instance.collection('Despesas').doc(documentId).update({
+      'tipo': type,
+      'valor': amount,
+      'categoria': category,
+      'data': date,
+      'notas': notes,
+    });
+  }
 }
-
- 
-
-
-

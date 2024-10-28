@@ -1,3 +1,5 @@
+import 'package:finace_maneger/components/app_colors.dart';
+import 'package:finace_maneger/pages/register_expense_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +24,6 @@ class Expense {
   });
 
   factory Expense.fromFirestore(Map<String, dynamic> json) {
-    print(json);
     return Expense(
       documentId: json['id'] ?? '',
       tipo: json['tipo'] ?? '',
@@ -50,7 +51,7 @@ class _ExpensePageState extends State<ExpensePage> {
   @override
   void initState() {
     super.initState();
-    _expensesFuture = _getExpenses(); // Carrega despesas ao iniciar
+    _expensesFuture = _getExpenses();
   }
 
   Future<List<Expense>> _getExpenses() async {
@@ -65,15 +66,19 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   void _editExpense(BuildContext context, Expense expense) {
-    // Lógica para editar a despesa
-    print("Edit expense: ${expense.tipo}");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterExpensePage(documentId: expense.documentId),
+      ),
+    );
   }
 
   void _deleteExpense(String documentId) async {
     try {
       await firestoreService.deleteExpense(documentId);
       setState(() {
-        _expensesFuture = _getExpenses(); // Atualiza a lista de despesas
+        _expensesFuture = _getExpenses();
       });
     } catch (e) {
       print("Erro ao excluir despesa: $e");
@@ -100,14 +105,14 @@ class _ExpensePageState extends State<ExpensePage> {
             } else {
               final expenses = snapshot.data!;
               return DataTable(
-                columnSpacing: 12, // Espaço entre as colunas
+                columnSpacing: 12,
                 columns: [
                   DataColumn(label: Text("Tipo")),
                   DataColumn(label: Text("Valor")),
                   DataColumn(label: Text("Categoria")),
                   DataColumn(label: Text("Data")),
                   DataColumn(label: Text("Notas")),
-                  DataColumn(label: Text("Ações")), // Coluna para ações
+                  DataColumn(label: Text("Ações")),
                 ],
                 rows: expenses.map((expense) {
                   return DataRow(cells: [
@@ -120,19 +125,19 @@ class _ExpensePageState extends State<ExpensePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.add), // Ícone de edição
+                          icon: Icon(Icons.edit, color: AppColors.white),
                           onPressed: () {
                             _editExpense(context, expense);
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red), // Ícone de exclusão
+                          icon: Icon(Icons.delete, color: AppColors.primarygroundColor),
                           onPressed: () {
                             _deleteExpense(expense.documentId);
                           },
                         ),
                       ],
-                    )),
+                    ))
                   ]);
                 }).toList(),
               );

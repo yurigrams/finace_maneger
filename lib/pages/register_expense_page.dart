@@ -9,6 +9,10 @@ import '../components/custom_button.dart';
 import '../service/firestore_service.dart';
 
 class RegisterExpensePage extends StatefulWidget {
+  final String? documentId;
+
+  RegisterExpensePage({this.documentId});
+
   @override
   _RegisterExpensePageState createState() => _RegisterExpensePageState();
 }
@@ -32,12 +36,36 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
     _categoryController = TextEditingController();
     _dateController = TextEditingController();
     _notesController = TextEditingController();
+
+    if (widget.documentId != null) {
+      _loadExpenseData(widget.documentId!);
+    }
+  }
+
+  void _loadExpenseData(String expenseId) async {
+    print(expenseId);
+    try {
+      DocumentSnapshot doc = await firestoreService.getExpenseById(expenseId);
+      print(doc);
+      if (doc.exists) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        setState(() {
+          _expenseTypeController.text = data['tipo'] ?? '';
+          _amountController.text = _currencyFormat.format(data['valor'] ?? 0.0);
+          _categoryController.text = data['categoria'] ?? '';
+          _dateController.text = DateFormat('dd/MM/yyyy').format((data['data'] as Timestamp).toDate());
+          _notesController.text = data['notas'] ?? '';
+        });
+      }
+    } catch (e) {
+      print('Erro ao carregar dados da despesa: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BasePage(
-      titles: 'Registrar Despesa',
+      titles: widget.documentId == null ? 'Registrar Despesa' : 'Editar Despesa',
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -57,10 +85,10 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
               _buildTextField("Notas Adicionais", _notesController, maxLines: 3),
               const SizedBox(height: 20),
               CustomButton(
-                titleButton: "Cadastrar",
+                titleButton: widget.documentId == null ? "Cadastrar" : "Salvar Alterações",
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    _createExpense();
+                    widget.documentId == null ? _createExpense() : _updateExpense();
                   }
                 },
               ),
@@ -72,12 +100,12 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
   }
 
   Widget _buildTextField(
-    String label,
-    TextEditingController controller, {
-    TextInputType keyboardType = TextInputType.text,
-    int maxLines = 1,
-    void Function(String)? onChanged,
-  }) {
+      String label,
+      TextEditingController controller, {
+        TextInputType keyboardType = TextInputType.text,
+        int maxLines = 1,
+        void Function(String)? onChanged,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: CustomInputRegister(
@@ -145,24 +173,45 @@ class _RegisterExpensePageState extends State<RegisterExpensePage> {
   }
 
   void _createExpense() async {
-  try {
-    await firestoreService.postExpense(
-      _expenseTypeController.text,
-      double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0,
-      _categoryController.text,
-      Timestamp.now(), 
-      _notesController.text,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Despesa cadastrada com sucesso!')),
-    );
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>ExpensePage()));
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Erro ao cadastrar despesa: $e')),
-    );
+    try {
+      await firestoreService.postExpense(
+        _expenseTypeController.text,
+        double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0,
+        _categoryController.text,
+        Timestamp.now(),
+        _notesController.text,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Despesa cadastrada com sucesso!')),
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ExpensePage()));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao cadastrar despesa: $e')),
+      );
+    }
   }
-}
+
+  void _updateExpense() async {
+    try {
+      await firestoreService.updateExpense(
+        widget.documentId!,
+        _expenseTypeController.text,
+        double.tryParse(_amountController.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0,
+        _categoryController.text,
+        Timestamp.now(),
+        _notesController.text,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Despesa atualizada com sucesso!')),
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ExpensePage()));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao atualizar despesa: $e')),
+      );
+    }
+  }
 
   @override
   void dispose() {
