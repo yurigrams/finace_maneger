@@ -30,24 +30,26 @@ class LoginPage extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomButtonLogin(email: email,senha: senha,
-                  titleButton: 'Entrar',
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                CustomButton(
-                    titleButton: 'Cadastrar',
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserRegistrationPage()));
-                    }),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomButtonLogin(email: email,senha: senha,
+                    titleButton: 'Entrar',
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  CustomButton(
+                      titleButton: 'Cadastrar',
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserRegistrationPage()));
+                      }),
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
